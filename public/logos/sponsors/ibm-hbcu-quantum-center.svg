@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 160" role="img" aria-label="IBM HBCU Quantum Center logo">
+  <rect width="960" height="160" fill="#ffffff"/>
+  <text x="18" y="105" font-family="Arial Black, Arial, sans-serif" font-size="88" font-weight="900" fill="#111111">IBM</text>
+  <line x1="208" y1="28" x2="208" y2="134" stroke="#444" stroke-width="2"/>
+  <text x="238" y="104" font-family="Arial, Helvetica, sans-serif" font-size="88" font-weight="700" fill="#cc0aa2">HBCU Quantum Center</text>
+</svg>

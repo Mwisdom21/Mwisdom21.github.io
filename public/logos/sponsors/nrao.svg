@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 220" role="img" aria-label="NRAO logo">
+  <rect width="240" height="220" rx="12" fill="#1f4a84"/>
+  <path d="M18 170 C70 84, 144 24, 204 18" fill="none" stroke="#ffffff" stroke-width="6"/>
+  <path d="M30 138 C66 196, 146 210, 210 196" fill="none" stroke="#ffffff" stroke-width="6"/>
+  <polygon points="188,20 194,36 210,36 197,46 202,62 188,52 174,62 179,46 166,36 182,36" fill="#ffffff"/>
+  <text x="16" y="205" font-family="Georgia, serif" font-size="66" fill="#ffffff">NRAO</text>
+</svg>

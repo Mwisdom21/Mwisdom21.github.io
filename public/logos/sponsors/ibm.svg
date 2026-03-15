@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 96" role="img" aria-label="IBM logo">
+  <rect width="280" height="96" fill="#ffffff"/>
+  <text x="16" y="68" font-family="Arial Black, Arial, sans-serif" font-size="64" font-weight="900" fill="#111111">IBM</text>
+  <g stroke="#ffffff" stroke-width="6">
+    <line x1="0" y1="22" x2="280" y2="22"/>
+    <line x1="0" y1="34" x2="280" y2="34"/>
+    <line x1="0" y1="46" x2="280" y2="46"/>
+    <line x1="0" y1="58" x2="280" y2="58"/>
+  </g>
+</svg>

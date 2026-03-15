@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" role="img" aria-label="NERSC logo">
+  <rect width="640" height="160" fill="#ffffff"/>
+  <text x="18" y="100" font-family="Arial Black, Arial, sans-serif" font-size="84" font-weight="900" fill="#111111">NERSC</text>
+  <polygon points="430,14 478,94 382,94" fill="#8fc63f"/>
+  <polygon points="478,94 574,94 526,14" fill="#ef3b2d"/>
+  <polygon points="382,94 478,94 430,146" fill="#009688"/>
+  <polygon points="478,94 574,94 526,146" fill="#19a2d8"/>
+  <polygon points="430,14 526,14 478,94" fill="#d33232"/>
+  <polygon points="430,146 526,146 478,94" fill="#2b4ea1"/>
+</svg>

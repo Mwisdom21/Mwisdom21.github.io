@@ -12,6 +12,8 @@ const OPENABLE_WINDOWS: WindowId[] = [
   "finder",
   "projects",
   "research",
+  "industry",
+  "awards",
   "code",
   "cv",
   "controlPanels",
@@ -63,6 +65,8 @@ export function MenuBar({ onOpenWindow }: MenuBarProps) {
           { id: "finder", label: "About This Portfolio", dividerAfter: true },
           { id: "projects", label: "Open Projects" },
           { id: "research", label: "Open Research" },
+          { id: "industry", label: "Open Industry" },
+          { id: "awards", label: "Open Awards" },
           { id: "code", label: "Open Code" },
           { id: "cv", label: "Open Resume", dividerAfter: true },
           { id: "controlPanels", label: "Control Panels" },
@@ -73,6 +77,8 @@ export function MenuBar({ onOpenWindow }: MenuBarProps) {
         label: "File",
         items: [
           { id: "projects", label: "Open Projects" },
+          { id: "industry", label: "Open Industry" },
+          { id: "awards", label: "Open Awards" },
           { id: "publications", label: "Open Publications" },
           { id: "finder", label: "New Finder Window" },
         ],
@@ -82,6 +88,8 @@ export function MenuBar({ onOpenWindow }: MenuBarProps) {
         label: "View",
         items: [
           { id: "research", label: "Open Research" },
+          { id: "industry", label: "Open Industry" },
+          { id: "awards", label: "Open Awards" },
           { id: "code", label: "Open Code" },
           { id: "controlPanels", label: "Control Panels" },
         ],
@@ -92,6 +100,8 @@ export function MenuBar({ onOpenWindow }: MenuBarProps) {
         items: [
           { id: "finder", label: "Bring Finder Front" },
           { id: "projects", label: "Bring Projects Front" },
+          { id: "industry", label: "Bring Industry Front" },
+          { id: "awards", label: "Bring Awards Front" },
           { id: "cv", label: "Bring Resume Front" },
           { id: "controlPanels", label: "Open Control Panels" },
         ],
@@ -101,6 +111,8 @@ export function MenuBar({ onOpenWindow }: MenuBarProps) {
   );
 
   const topTabs: Array<{ id: WindowId; label: string }> = [
+    { id: "industry", label: "Industry" },
+    { id: "awards", label: "Awards" },
     { id: "publications", label: "Publications" },
     { id: "sponsors", label: "Sponsors" },
     { id: "contact", label: "Contact" },

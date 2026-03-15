@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { MenuBar } from "@/components/menubar/MenuBar";
-import { DesktopIcon } from "@/components/desktop/DesktopIcon";
+import { DesktopIcon, type DesktopIconAsset } from "@/components/desktop/DesktopIcon";
 import { WindowManager, type WindowId } from "@/components/window/WindowManager";
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(value, max));
 
-type IconId = "finder" | "projects" | "research" | "code" | "cv";
+type IconId = "finder" | "projects" | "research" | "industry" | "awards" | "code" | "cv";
 type IconPositionMap = Record<IconId, { x: number; y: number }>;
 
 const ICONS: Array<{
@@ -15,21 +15,95 @@ const ICONS: Array<{
   label: string;
   detail: string;
   windowId: IconId;
-  iconSrc?: string;
+  icon?: DesktopIconAsset;
 }> = [
-  { glyph: "HD", label: "Finder", detail: "System Disk", windowId: "finder" },
-  { glyph: "PJ", label: "Projects", detail: "Build archive", windowId: "projects" },
-  { glyph: "RS", label: "Research", detail: "Notes + ideas", windowId: "research" },
-  { glyph: "<>", label: "Code", detail: "Engineering stack", windowId: "code" },
-  { glyph: "CV", label: "Resume", detail: "Experience", windowId: "cv" },
+  {
+    glyph: "HD",
+    label: "Finder",
+    detail: "System Disk",
+    windowId: "finder",
+    icon: {
+      bwSrc: "/icons/desktop/finder-bw.svg",
+      colorSrc: "/icons/desktop/finder-color.svg",
+      alt: "Finder icon",
+    },
+  },
+  {
+    glyph: "PJ",
+    label: "Projects",
+    detail: "Build archive",
+    windowId: "projects",
+    icon: {
+      bwSrc: "/icons/desktop/projects-bw.svg",
+      colorSrc: "/icons/desktop/projects-color.svg",
+      alt: "Projects icon",
+    },
+  },
+  {
+    glyph: "RS",
+    label: "Research",
+    detail: "Notes + ideas",
+    windowId: "research",
+    icon: {
+      bwSrc: "/icons/desktop/research-bw.svg",
+      colorSrc: "/icons/desktop/research-color.svg",
+      alt: "Research icon",
+    },
+  },
+  {
+    glyph: "IN",
+    label: "Industry",
+    detail: "Work roles",
+    windowId: "industry",
+    icon: {
+      bwSrc: "/icons/desktop/industry-bw.svg",
+      colorSrc: "/icons/desktop/industry-color.svg",
+      alt: "Industry icon",
+    },
+  },
+  {
+    glyph: "AW",
+    label: "Awards",
+    detail: "Pitch + honors",
+    windowId: "awards",
+    icon: {
+      bwSrc: "/icons/desktop/awards-bw.svg",
+      colorSrc: "/icons/desktop/awards-color.svg",
+      alt: "Awards icon",
+    },
+  },
+  {
+    glyph: "<>",
+    label: "Code",
+    detail: "Engineering stack",
+    windowId: "code",
+    icon: {
+      bwSrc: "/icons/desktop/code-bw.svg",
+      colorSrc: "/icons/desktop/code-color.svg",
+      alt: "Code icon",
+    },
+  },
+  {
+    glyph: "CV",
+    label: "Resume",
+    detail: "Experience",
+    windowId: "cv",
+    icon: {
+      bwSrc: "/icons/desktop/resume-bw.svg",
+      colorSrc: "/icons/desktop/resume-color.svg",
+      alt: "Resume icon",
+    },
+  },
 ];
 
 const DEFAULT_ICON_POSITIONS: IconPositionMap = {
   finder: { x: 0, y: 0 },
   projects: { x: 0, y: 110 },
   research: { x: 0, y: 220 },
-  code: { x: 0, y: 330 },
-  cv: { x: 0, y: 440 },
+  industry: { x: 0, y: 330 },
+  awards: { x: 0, y: 440 },
+  code: { x: 0, y: 550 },
+  cv: { x: 0, y: 660 },
 };
 
 export type ThemeMode = "light" | "dark";
@@ -68,8 +142,10 @@ export function Desktop() {
       finder: { x: rightX, y: 20 },
       projects: { x: rightX, y: 132 },
       research: { x: rightX, y: 244 },
-      code: { x: rightX, y: 356 },
-      cv: { x: rightX, y: 468 },
+      industry: { x: rightX, y: 356 },
+      awards: { x: rightX, y: 468 },
+      code: { x: rightX, y: 580 },
+      cv: { x: rightX, y: 692 },
     });
 
     setIconsPlaced(true);
@@ -217,6 +293,7 @@ export function Desktop() {
           <WindowManager
             openWindows={openWindows}
             activeWindow={activeWindow}
+            onOpenWindow={openWindow}
             onFocusWindow={setActiveWindow}
             onCloseWindow={closeWindow}
             themeMode={themeMode}
@@ -234,3 +311,7 @@ export function Desktop() {
     </main>
   );
 }
+
+
+
+

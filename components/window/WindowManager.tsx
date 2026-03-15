@@ -5,6 +5,11 @@ import { FinderWindow } from "@/components/window/FinderWindow";
 import { WindowFrame } from "@/components/window/WindowFrame";
 import { ProjectsWindow } from "@/components/content/ProjectsWindow";
 import { ResearchWindow } from "@/components/content/ResearchWindow";
+import { IndustryWindow } from "@/components/content/IndustryWindow";
+import { AwardsWindow } from "@/components/content/AwardsWindow";
+import { ResearchTopicWindow } from "@/components/content/ResearchTopicWindow";
+import { IndustryRoleWindow } from "@/components/content/IndustryRoleWindow";
+import { AwardDetailWindow } from "@/components/content/AwardDetailWindow";
 import { CodeWindow } from "@/components/content/CodeWindow";
 import { CvWindow } from "@/components/content/CvWindow";
 import { ProfileWindow } from "@/components/content/ProfileWindow";
@@ -12,21 +17,30 @@ import { ControlPanelsWindow } from "@/components/content/ControlPanelsWindow";
 import { PublicationsWindow } from "@/components/content/PublicationsWindow";
 import { SponsorsWindow } from "@/components/content/SponsorsWindow";
 import { ContactWindow } from "@/components/content/ContactWindow";
+import type { ResearchTopicWindowId } from "@/components/content/researchTopics";
+import type { IndustryRoleWindowId } from "@/components/content/industryRoles";
+import type { AwardWindowId } from "@/components/content/awardEntries";
 
 export type WindowId =
   | "finder"
   | "projects"
   | "research"
+  | "industry"
+  | "awards"
   | "code"
   | "cv"
   | "controlPanels"
   | "publications"
   | "sponsors"
-  | "contact";
+  | "contact"
+  | ResearchTopicWindowId
+  | IndustryRoleWindowId
+  | AwardWindowId;
 
 type WindowManagerProps = {
   openWindows: WindowId[];
   activeWindow: WindowId;
+  onOpenWindow: (windowId: WindowId, options?: { startFullscreen?: boolean }) => void;
   onFocusWindow: (windowId: WindowId) => void;
   onCloseWindow: (windowId: WindowId) => void;
   themeMode: "light" | "dark";
@@ -51,13 +65,28 @@ type WindowDef = {
 const WINDOW_DEFS: Record<WindowId, WindowDef> = {
   finder: { title: "Finder", width: 420, height: 300, start: { x: 56, y: 362 } },
   projects: { title: "Projects", width: 460, height: 330, start: { x: 146, y: 132 } },
-  research: { title: "Research", width: 450, height: 320, start: { x: 198, y: 178 } },
+  research: { title: "Research", width: 430, height: 320, start: { x: 198, y: 178 } },
+  industry: { title: "Industry", width: 430, height: 320, start: { x: 228, y: 206 } },
+  awards: { title: "Awards", width: 430, height: 320, start: { x: 258, y: 234 } },
   code: { title: "Code", width: 520, height: 340, start: { x: 265, y: 96 } },
   cv: { title: "Resume", width: 420, height: 350, start: { x: 316, y: 150 } },
   controlPanels: { title: "Control Panels", width: 380, height: 260, start: { x: 390, y: 88 } },
   publications: { title: "Publications", width: 520, height: 320, start: { x: 212, y: 122 } },
   sponsors: { title: "Sponsors", width: 460, height: 280, start: { x: 242, y: 182 } },
   contact: { title: "Contact", width: 420, height: 260, start: { x: 276, y: 226 } },
+  researchIbmQuantum: { title: "IBM HBCU Quantum Center", width: 580, height: 380, start: { x: 260, y: 120 } },
+  researchHowardNasa: { title: "Howard University / NASA", width: 580, height: 380, start: { x: 230, y: 148 } },
+  researchDoeHpc: { title: "DOE HPC Bootcamp", width: 580, height: 380, start: { x: 200, y: 176 } },
+  researchNrao: { title: "National Radio Astronomy Observatory", width: 620, height: 390, start: { x: 170, y: 204 } },
+  researchHowardForensics: { title: "Howard Digital Forensics", width: 600, height: 380, start: { x: 140, y: 232 } },
+  researchHasnineAmazon: { title: "Hasnine Lab / Amazon", width: 600, height: 380, start: { x: 110, y: 260 } },
+  industryL3harris: { title: "L3Harris Technologies", width: 620, height: 390, start: { x: 200, y: 120 } },
+  industryCollins: { title: "Collins Aerospace", width: 600, height: 380, start: { x: 170, y: 148 } },
+  industryRaytheon: { title: "Raytheon Intelligence & Space", width: 620, height: 390, start: { x: 140, y: 176 } },
+  industryNuaxis: { title: "NuAxis Innovations", width: 560, height: 360, start: { x: 110, y: 204 } },
+  awardsPitch: { title: "Pitch Competition", width: 560, height: 360, start: { x: 180, y: 140 } },
+  awardsHonors: { title: "Awards + Honors", width: 560, height: 360, start: { x: 150, y: 168 } },
+  awardsScholarships: { title: "Scholarships", width: 560, height: 360, start: { x: 120, y: 196 } },
 };
 
 const PROFILE_DEF = {
@@ -72,6 +101,7 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 export function WindowManager({
   openWindows,
   activeWindow,
+  onOpenWindow,
   onFocusWindow,
   onCloseWindow,
   themeMode,
@@ -87,24 +117,54 @@ export function WindowManager({
     finder: WINDOW_DEFS.finder.start,
     projects: WINDOW_DEFS.projects.start,
     research: WINDOW_DEFS.research.start,
+    industry: WINDOW_DEFS.industry.start,
+    awards: WINDOW_DEFS.awards.start,
     code: WINDOW_DEFS.code.start,
     cv: WINDOW_DEFS.cv.start,
     controlPanels: WINDOW_DEFS.controlPanels.start,
     publications: WINDOW_DEFS.publications.start,
     sponsors: WINDOW_DEFS.sponsors.start,
     contact: WINDOW_DEFS.contact.start,
+    researchIbmQuantum: WINDOW_DEFS.researchIbmQuantum.start,
+    researchHowardNasa: WINDOW_DEFS.researchHowardNasa.start,
+    researchDoeHpc: WINDOW_DEFS.researchDoeHpc.start,
+    researchNrao: WINDOW_DEFS.researchNrao.start,
+    researchHowardForensics: WINDOW_DEFS.researchHowardForensics.start,
+    researchHasnineAmazon: WINDOW_DEFS.researchHasnineAmazon.start,
+    industryL3harris: WINDOW_DEFS.industryL3harris.start,
+    industryCollins: WINDOW_DEFS.industryCollins.start,
+    industryRaytheon: WINDOW_DEFS.industryRaytheon.start,
+    industryNuaxis: WINDOW_DEFS.industryNuaxis.start,
+    awardsPitch: WINDOW_DEFS.awardsPitch.start,
+    awardsHonors: WINDOW_DEFS.awardsHonors.start,
+    awardsScholarships: WINDOW_DEFS.awardsScholarships.start,
   }));
 
   const [expanded, setExpanded] = useState<Record<WindowId, boolean>>({
     finder: false,
     projects: false,
     research: false,
+    industry: false,
+    awards: false,
     code: false,
     cv: false,
     controlPanels: false,
     publications: false,
     sponsors: false,
     contact: false,
+    researchIbmQuantum: false,
+    researchHowardNasa: false,
+    researchDoeHpc: false,
+    researchNrao: false,
+    researchHowardForensics: false,
+    researchHasnineAmazon: false,
+    industryL3harris: false,
+    industryCollins: false,
+    industryRaytheon: false,
+    industryNuaxis: false,
+    awardsPitch: false,
+    awardsHonors: false,
+    awardsScholarships: false,
   });
 
   const [zOrder, setZOrder] = useState<WindowId[]>(openWindows);
@@ -197,6 +257,58 @@ export function WindowManager({
   const widthForExpanded = containerSize.width > 0 ? containerSize.width : 1100;
   const heightForExpanded = containerSize.height > 0 ? containerSize.height : 620;
 
+  const renderWindowContent = (windowId: WindowId) => {
+    switch (windowId) {
+      case "finder":
+        return <FinderWindow />;
+      case "projects":
+        return <ProjectsWindow />;
+      case "research":
+        return <ResearchWindow onOpenTopic={(topicId) => onOpenWindow(topicId)} />;
+      case "industry":
+        return <IndustryWindow onOpenRole={(roleId) => onOpenWindow(roleId)} />;
+      case "awards":
+        return <AwardsWindow onOpenEntry={(entryId) => onOpenWindow(entryId)} />;
+      case "code":
+        return <CodeWindow />;
+      case "cv":
+        return <CvWindow />;
+      case "controlPanels":
+        return (
+          <ControlPanelsWindow
+            themeMode={themeMode}
+            onThemeChange={onThemeChange}
+            showTexture={showTexture}
+            onTextureChange={onTextureChange}
+          />
+        );
+      case "publications":
+        return <PublicationsWindow />;
+      case "sponsors":
+        return <SponsorsWindow />;
+      case "contact":
+        return <ContactWindow />;
+      case "researchIbmQuantum":
+      case "researchHowardNasa":
+      case "researchDoeHpc":
+      case "researchNrao":
+      case "researchHowardForensics":
+      case "researchHasnineAmazon":
+        return <ResearchTopicWindow topicId={windowId} />;
+      case "industryL3harris":
+      case "industryCollins":
+      case "industryRaytheon":
+      case "industryNuaxis":
+        return <IndustryRoleWindow roleId={windowId} />;
+      case "awardsPitch":
+      case "awardsHonors":
+      case "awardsScholarships":
+        return <AwardDetailWindow entryId={windowId} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <section ref={containerRef} className="fm-window-layer" aria-label="Open windows">
       <WindowFrame
@@ -227,25 +339,6 @@ export function WindowManager({
           const frameTop = isExpanded ? 8 : position.y;
           const frameWidth = isExpanded ? Math.max(320, widthForExpanded - 16) : def.width;
           const frameHeight = isExpanded ? Math.max(220, heightForExpanded - 16) : def.height;
-
-          const contentByWindow = {
-            finder: <FinderWindow />,
-            projects: <ProjectsWindow />,
-            research: <ResearchWindow />,
-            code: <CodeWindow />,
-            cv: <CvWindow />,
-            controlPanels: (
-              <ControlPanelsWindow
-                themeMode={themeMode}
-                onThemeChange={onThemeChange}
-                showTexture={showTexture}
-                onTextureChange={onTextureChange}
-              />
-            ),
-            publications: <PublicationsWindow />,
-            sponsors: <SponsorsWindow />,
-            contact: <ContactWindow />,
-          };
 
           return (
             <WindowFrame
@@ -283,7 +376,7 @@ export function WindowManager({
                 };
               }}
             >
-              {contentByWindow[id]}
+              {renderWindowContent(id)}
             </WindowFrame>
           );
         })}
